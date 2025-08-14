@@ -1,12 +1,15 @@
 package com.example.cardgameapi.repository.impl;
 
+import com.example.cardgameapi.entity.InventoryItem;
 import com.example.cardgameapi.entity.user.User;
 import com.example.cardgameapi.repository.UserRepository;
+import com.example.cardgameapi.repository.mapper.InventoryItemRowMapper;
 import com.example.cardgameapi.repository.mapper.UserRowMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -15,37 +18,15 @@ public class UserRepositoryImpl implements UserRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    private final String FIND_BY_ID = """
-            SELECT id, username, email, password, role, created_at, updated_at
-            FROM users
-            WHERE id = ?
-            """;
-
-    private final String FIND_BY_USERNAME = """
-            SELECT id, username, email, password, role, created_at, updated_at
-            FROM users
-            WHERE username = ?
-            """;
-
-    private final String CREATE = """
-            INSERT INTO users (username, email, password, role)
-            VALUES (?, ?, ?, ?)
-            RETURNING id, username, email, password, role, created_at, updated_at
-            """;
-
-    private final String UPDATE = """
-            UPDATE users
-            SET username = ?, email = ?, password = ?, role = ?
-            WHERE id = ?
-            RETURNING id, username, email, password, role, created_at, updated_at
-            """;
-
-    private final String COUNT = "SELECT COUNT(*) FROM users";
-
     @Override
     public Optional<User> findById(Long id) {
-        User user = this.jdbcTemplate.queryForObject(
-                this.FIND_BY_ID,
+        String query = """
+                SELECT id, username, email, password, role, created_at, updated_at
+                FROM users
+                WHERE id = ?
+                """;
+        User user = jdbcTemplate.queryForObject(
+                query,
                 UserRowMapper::mapRow,
                 id
         );
@@ -55,8 +36,14 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public Optional<User> findByUsername(String username) {
-        User user = this.jdbcTemplate.queryForObject(
-                this.FIND_BY_USERNAME,
+        String query = """
+                SELECT id, username, email, password, role, created_at, updated_at
+                FROM users
+                WHERE username = ?
+                """;
+
+        User user = jdbcTemplate.queryForObject(
+                query,
                 UserRowMapper::mapRow,
                 username
         );
@@ -66,8 +53,14 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public User create(User user) {
-        return this.jdbcTemplate.queryForObject(
-                this.CREATE,
+        String query = """
+                INSERT INTO users (username, email, password, role)
+                VALUES (?, ?, ?, ?)
+                RETURNING id, username, email, password, role, created_at, updated_at
+                """;
+
+        return jdbcTemplate.queryForObject(
+                query,
                 UserRowMapper::mapRow,
                 user.getUsername(), user.getEmail(),
                 user.getPassword(), user.getRole().toString()
@@ -76,8 +69,15 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public User update(User user) {
-        return this.jdbcTemplate.queryForObject(
-                this.UPDATE,
+        String query = """
+                UPDATE users
+                SET username = ?, email = ?, password = ?, role = ?
+                WHERE id = ?
+                RETURNING id, username, email, password, role, created_at, updated_at
+                """;
+
+        return jdbcTemplate.queryForObject(
+                query,
                 UserRowMapper::mapRow,
                 user.getUsername(), user.getEmail(),
                 user.getPassword(), user.getRole().toString(),
@@ -87,9 +87,30 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public Integer count() {
-        return this.jdbcTemplate.queryForObject(
-                this.COUNT, Integer.class
+        String query = "SELECT COUNT(*) FROM users";
+
+        return jdbcTemplate.queryForObject(
+                query, Integer.class
         );
+    }
+
+    @Override
+    public void addInventoryItemToUser(long userId, long itemId) {
+        String query = "INSERT INTO user_inventory (user_id, inventory_id) VALUES (?, ?)";
+
+        jdbcTemplate.update(query, userId, itemId);
+    }
+
+    @Override
+    public List<InventoryItem> getInventoryItemsByUserId(Long userId) {
+        String query = """
+            SELECT inventories.id, inventories.name, inventories.created_at, inventories.updated_at
+            FROM user_inventory
+            JOIN inventories ON user_inventory.inventory_id = inventories.id
+            WHERE user_inventory.user_id = ?
+        """;
+
+        return jdbcTemplate.query(query, InventoryItemRowMapper::mapRow, userId);
     }
 
 }

@@ -3,7 +3,7 @@ package com.example.cardgameapi.web.response;
 import lombok.Data;
 
 @Data
-public class InventoryItemResponse {
+public class CollectionItemResponse {
 
     private Long id;
     private String name;

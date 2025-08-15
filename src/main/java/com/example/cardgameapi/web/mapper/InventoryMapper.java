@@ -4,7 +4,6 @@ import com.example.cardgameapi.entity.InventoryItem;
 import com.example.cardgameapi.web.response.InventoryItemResponse;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -18,6 +17,7 @@ public class InventoryMapper {
         InventoryItemResponse inventoryItemResponse = new InventoryItemResponse();
         inventoryItemResponse.setId(inventoryItem.getId());
         inventoryItemResponse.setName(inventoryItem.getName());
+        inventoryItemResponse.setImage(inventoryItem.getImage());
         inventoryItemResponse.setCreatedAt(inventoryItem.getCreatedAt().toString());
         inventoryItemResponse.setUpdatedAt(inventoryItem.getUpdatedAt().toString());
         return inventoryItemResponse;

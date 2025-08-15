@@ -1,5 +1,6 @@
 package com.example.cardgameapi.service.impl;
 
+import com.example.cardgameapi.entity.CollectionItem;
 import com.example.cardgameapi.entity.InventoryItem;
 import com.example.cardgameapi.entity.user.User;
 import com.example.cardgameapi.repository.UserRepository;
@@ -21,13 +22,19 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+            .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
     @Override
     public List<InventoryItem> getInventoryItems() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return userRepository.getInventoryItemsByUserId(user.getId());
+    }
+
+    @Override
+    public List<CollectionItem> getCollectionItems() {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return userRepository.getCollectionItemsByUserId(user.getId());
     }
 
 }

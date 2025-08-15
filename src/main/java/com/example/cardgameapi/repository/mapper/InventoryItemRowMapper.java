@@ -11,6 +11,7 @@ public class InventoryItemRowMapper {
         InventoryItem inventoryItem = new InventoryItem();
         inventoryItem.setId(resultSet.getLong("id"));
         inventoryItem.setName(resultSet.getString("name"));
+        inventoryItem.setImage(resultSet.getString("image"));
         inventoryItem.setCreatedAt(resultSet.getTimestamp("created_at").toLocalDateTime());
         inventoryItem.setUpdatedAt(resultSet.getTimestamp("updated_at").toLocalDateTime());
         return inventoryItem;

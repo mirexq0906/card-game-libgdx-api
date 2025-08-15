@@ -5,7 +5,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class InventoryItem {
+public class CollectionItem {
 
     private Long id;
     private String name;

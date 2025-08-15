@@ -1,8 +1,7 @@
 package com.example.cardgameapi.repository;
 
-import com.example.cardgameapi.entity.InventoryItem;
-
 public interface InventoryRepository {
 
+    void addInventoryItemToUser(Long userId, Long itemId);
 
 }

@@ -15,17 +15,13 @@ import java.util.List;
 public class User implements UserDetails {
 
     private Long id;
-
     private String username;
-
     private String email;
-
     private String password;
-
     private Role role = Role.USER;
-
+    private Integer gold;
+    private Integer mana;
     private LocalDateTime createTime;
-
     private LocalDateTime updateTime;
 
     @Override

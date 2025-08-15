@@ -1,8 +1,10 @@
 package com.example.cardgameapi.service.impl;
 
+import com.example.cardgameapi.entity.daily_task.TypeTask;
 import com.example.cardgameapi.entity.user.User;
 import com.example.cardgameapi.repository.UserRepository;
 import com.example.cardgameapi.service.AuthService;
+import com.example.cardgameapi.service.DailyTaskService;
 import com.example.cardgameapi.service.JwtService;
 import com.example.cardgameapi.web.dto.UserDto;
 import com.example.cardgameapi.web.mapper.UserMapper;
@@ -11,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +22,7 @@ import org.springframework.stereotype.Service;
 public class AuthServiceImpl implements AuthService {
 
     private final AuthenticationManager authenticationManager;
+    private final DailyTaskService dailyTaskService;
     private final UserRepository userRepository;
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
@@ -27,13 +31,15 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public JwtResponse login(UserDto userDto) {
         Authentication authenticate = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        userDto.getUsername(),
-                        userDto.getPassword()
-                )
+            new UsernamePasswordAuthenticationToken(
+                userDto.getUsername(),
+                userDto.getPassword()
+            )
         );
 
         User user = (User) authenticate.getPrincipal();
+        SecurityContextHolder.getContext().setAuthentication(authenticate);
+        dailyTaskService.updateProgress(TypeTask.LOGIN);
 
         JwtResponse jwtResponse = new JwtResponse();
         jwtResponse.setAccessToken(jwtService.generateToken(user));
@@ -45,7 +51,7 @@ public class AuthServiceImpl implements AuthService {
     public User register(UserDto userDto) {
         User user = userMapper.requestToUser(userDto);
         user.setPassword(
-                passwordEncoder.encode(user.getPassword())
+            passwordEncoder.encode(user.getPassword())
         );
 
         return userRepository.create(user);

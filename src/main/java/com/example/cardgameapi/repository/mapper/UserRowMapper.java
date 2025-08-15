@@ -19,6 +19,8 @@ public class UserRowMapper {
         user.setPassword(resultSet.getString("password"));
         user.setEmail(resultSet.getString("email"));
         user.setRole(Role.valueOf(resultSet.getString("role")));
+        user.setGold(resultSet.getInt("gold"));
+        user.setMana(resultSet.getInt("mana"));
         user.setCreateTime(createdAt);
         user.setUpdateTime(updatedAt);
         return user;

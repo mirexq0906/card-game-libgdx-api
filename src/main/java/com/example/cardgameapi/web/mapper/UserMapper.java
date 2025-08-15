@@ -16,18 +16,14 @@ public class UserMapper {
         return user;
     }
 
-    public User requestToUser(UserDto userDto, Long id) {
-        User user = this.requestToUser(userDto);
-        user.setId(id);
-        return user;
-    }
-
     public UserResponse userToResponse(User user) {
         UserResponse userResponse = new UserResponse();
         userResponse.setId(user.getId());
         userResponse.setUsername(user.getUsername());
         userResponse.setEmail(user.getEmail());
         userResponse.setRole(user.getRole().toString());
+        userResponse.setGold(user.getGold().toString());
+        userResponse.setMana(user.getMana().toString());
         userResponse.setCreatedAt(user.getCreateTime().toString());
         userResponse.setUpdatedAt(user.getUpdateTime().toString());
         return userResponse;

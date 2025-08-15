@@ -5,6 +5,8 @@ CREATE TABLE IF NOT EXISTS users
     email      VARCHAR(255) UNIQUE,
     password   VARCHAR(255),
     role       VARCHAR(10) NOT NULL,
+    gold VARCHAR(255),
+    mana VARCHAR(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -13,15 +15,73 @@ CREATE TABLE IF NOT EXISTS inventories
 (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) UNIQUE,
+    image VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS collections
+(
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) UNIQUE,
+    image VARCHAR(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS user_inventory
 (
+    id SERIAL PRIMARY KEY,
     user_id INTEGER NOT NULL,
     inventory_id INTEGER NOT NULL,
-    PRIMARY KEY (user_id, inventory_id),
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (inventory_id) REFERENCES inventories(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS user_collection
+(
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL,
+    collection_id INTEGER NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (collection_id) REFERENCES collections(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS rewards
+(
+    id SERIAL PRIMARY KEY,
+    gold INTEGER DEFAULT 0,
+    mana INTEGER DEFAULT 0,
+    inventory_id INTEGER NOT NULL,
+    amount_inventory_items INTEGER DEFAULT 0,
+    FOREIGN KEY (inventory_id) REFERENCES inventories(id) ON DELETE CASCADE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS daily_tasks
+(
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    description TEXT,
+    type_task VARCHAR(50) NOT NULL,
+    target INTEGER NOT NULL,
+    reward_id INTEGER NOT NULL,
+    FOREIGN KEY (reward_id) REFERENCES rewards(id) ON DELETE CASCADE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS user_task_daily
+(
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL,
+    daily_task_id INTEGER NOT NULL,
+    progress INTEGER DEFAULT 0,
+    completed BOOLEAN DEFAULT FALSE,
+    reward_taken BOOLEAN DEFAULT FALSE,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (daily_task_id) REFERENCES daily_tasks(id) ON DELETE CASCADE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

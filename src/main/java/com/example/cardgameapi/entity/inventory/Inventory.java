@@ -1,4 +1,4 @@
-package com.example.cardgameapi.entity.daily_task;
+package com.example.cardgameapi.entity.inventory;
 
 import jakarta.persistence.*;
 import lombok.Data;
@@ -9,23 +9,16 @@ import java.time.LocalDateTime;
 
 @Data
 @Entity
-public class DailyTask {
+public class Inventory {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String description;
-
+    private String image;
     @Enumerated(EnumType.STRING)
-    private TypeTask typeTask;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "reward_id")
-    private Reward reward;
-
-    private Integer target;
-
+    private InventoryType type;
     @CreationTimestamp
     private LocalDateTime createdAt;
     @UpdateTimestamp

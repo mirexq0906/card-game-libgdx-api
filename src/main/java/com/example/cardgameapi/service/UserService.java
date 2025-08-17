@@ -1,16 +1,15 @@
 package com.example.cardgameapi.service;
 
-import com.example.cardgameapi.entity.CollectionItem;
-import com.example.cardgameapi.entity.InventoryItem;
-import com.example.cardgameapi.entity.user.User;
+import com.example.cardgameapi.entity.collection.Character;
+import com.example.cardgameapi.entity.inventory.Inventory;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
-import java.util.List;
+import java.util.Set;
 
 public interface UserService extends UserDetailsService {
 
-    List<InventoryItem> getInventoryItems();
+    Set<Inventory> getInventoryItems();
 
-    List<CollectionItem> getCollectionItems();
+    Set<Character> getCollectionItems();
 
 }

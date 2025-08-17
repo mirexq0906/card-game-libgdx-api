@@ -1,13 +1,7 @@
 package com.example.cardgameapi.web.response;
 
-import com.example.cardgameapi.entity.InventoryItem;
-import com.example.cardgameapi.entity.daily_task.DailyTask;
-import com.example.cardgameapi.entity.daily_task.Reward;
 import com.example.cardgameapi.entity.daily_task.TypeTask;
-import com.example.cardgameapi.entity.user.User;
 import lombok.Data;
-
-import java.time.LocalDateTime;
 
 @Data
 public class UserDailyTaskResponse {

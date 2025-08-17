@@ -9,6 +9,7 @@ import com.example.cardgameapi.exception.EntityNotFoundException;
 import com.example.cardgameapi.repository.DailyTaskRepository;
 import com.example.cardgameapi.repository.InventoryRepository;
 import com.example.cardgameapi.repository.UserRepository;
+import com.example.cardgameapi.repository.UserTaskDailyRepository;
 import com.example.cardgameapi.service.DailyTaskService;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -26,21 +27,22 @@ import java.util.List;
 public class DailyTaskServiceImpl implements DailyTaskService {
 
     private final DailyTaskRepository dailyTaskRepository;
+    private final UserTaskDailyRepository userTaskDailyRepository;
     private final UserRepository userRepository;
-    private final InventoryRepository inventoryRepository;
-
 
     @Override
     public List<UserTaskDaily> findUserDailyTasks() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return dailyTaskRepository.findUserDailyTasks(user.getId());
+        return userTaskDailyRepository.findAllByUserId(user.getId());
     }
 
     @Override
     @Transactional
     public void takeReward(Long userTaskDailyId) {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        UserTaskDaily userTaskDaily = dailyTaskRepository.findUserDailyTaskByIdAndUserId(userTaskDailyId, user.getId())
+        User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userRepository.findById(principal.getId())
+            .orElseThrow(() -> new RuntimeException("User not found"));
+        UserTaskDaily userTaskDaily = userTaskDailyRepository.findByIdAndUserId(userTaskDailyId, user.getId())
             .orElseThrow(() -> new EntityNotFoundException("User Task Daily Not Found"));
 
         if (!userTaskDaily.getCompleted()) {
@@ -49,21 +51,20 @@ public class DailyTaskServiceImpl implements DailyTaskService {
 
         Reward reward = userTaskDaily.getDailyTask().getReward();
 
-        if (reward.getInventoryItem() != null) {
-            inventoryRepository.addInventoryItemToUser(user.getId(), reward.getInventoryItem().getId());
+        if (reward.getInventory() != null) {
+            user.getInventories().add(reward.getInventory());
         }
 
         user.setMana(user.getMana() + reward.getMana());
         user.setGold(user.getGold() + reward.getGold());
         userTaskDaily.setRewardTaken(true);
-        userRepository.updateResource(user);
-        dailyTaskRepository.updateUserDailyTask(userTaskDaily);
     }
 
     @Override
+    @Transactional
     public void updateProgress(TypeTask typeTask) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        List<UserTaskDaily> userDailyTasks = dailyTaskRepository.findUserDailyTasks(user.getId());
+        List<UserTaskDaily> userDailyTasks = userTaskDailyRepository.findAllByUserId(user.getId());
 
         for (UserTaskDaily userTaskDaily : userDailyTasks) {
             if (userTaskDaily.getCompleted()) {
@@ -77,7 +78,6 @@ public class DailyTaskServiceImpl implements DailyTaskService {
                     userTaskDaily.setCompleted(true);
                 }
 
-                dailyTaskRepository.updateUserDailyTask(userTaskDaily);
                 break;
             }
         }
@@ -103,14 +103,8 @@ public class DailyTaskServiceImpl implements DailyTaskService {
             });
         });
 
-        dailyTaskRepository.deleteUserDailyTasks();
-        dailyTaskRepository.createPlayerDailyTaskList(userTaskDailyList);
-    }
-
-    @PostConstruct
-    @Transactional
-    public void init() {
-        refreshDailyTaskList();
+        userTaskDailyRepository.deleteAll();
+        userTaskDailyRepository.saveAll(userTaskDailyList);
     }
 
 }

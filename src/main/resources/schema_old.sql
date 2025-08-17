@@ -11,15 +11,6 @@ CREATE TABLE IF NOT EXISTS users
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS inventories
-(
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(255) UNIQUE,
-    image VARCHAR(255),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
 CREATE TABLE IF NOT EXISTS collections
 (
     id SERIAL PRIMARY KEY,
@@ -29,15 +20,6 @@ CREATE TABLE IF NOT EXISTS collections
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS user_inventory
-(
-    id SERIAL PRIMARY KEY,
-    user_id INTEGER NOT NULL,
-    inventory_id INTEGER NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-    FOREIGN KEY (inventory_id) REFERENCES inventories(id) ON DELETE CASCADE
-);
-
 CREATE TABLE IF NOT EXISTS user_collection
 (
     id SERIAL PRIMARY KEY,
@@ -45,6 +27,40 @@ CREATE TABLE IF NOT EXISTS user_collection
     collection_id INTEGER NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (collection_id) REFERENCES collections(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS inventories
+(
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) UNIQUE,
+    description VARCHAR(255),
+    image VARCHAR(255),
+    type VARCHAR(50);
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS equipment
+(
+    item_id BIGINT PRIMARY KEY,
+    slot_type VARCHAR(50),
+    power INT,
+    FOREIGN KEY (item_id) REFERENCES items(id)
+);
+
+CREATE TABLE IF NOT EXISTS crystal
+(
+    item_id BIGINT PRIMARY KEY,
+    FOREIGN KEY (item_id) REFERENCES items(id)
+);
+
+CREATE TABLE IF NOT EXISTS user_inventory
+(
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL,
+    inventory_id INTEGER NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (inventory_id) REFERENCES inventories(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS rewards

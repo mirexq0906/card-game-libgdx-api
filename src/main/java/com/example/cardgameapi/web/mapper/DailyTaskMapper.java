@@ -26,8 +26,8 @@ public class DailyTaskMapper {
         userDailyTaskResponse.setDailyTask(dailyTaskResponse);
         userDailyTaskResponse.setCompleted(userTaskDaily.getCompleted());
         userDailyTaskResponse.setRewardTaken(userTaskDaily.getRewardTaken());
-        userDailyTaskResponse.setCreatedAt(userTaskDaily.getCreatedAt().toString());
-        userDailyTaskResponse.setUpdatedAt(userTaskDaily.getUpdatedAt().toString());
+        userDailyTaskResponse.setCreatedAt(userTaskDaily.getCreatedAt() != null ? userTaskDaily.getCreatedAt().toString() : null);
+        userDailyTaskResponse.setUpdatedAt(userTaskDaily.getUpdatedAt() != null ? userTaskDaily.getUpdatedAt().toString() : null);
 
         dailyTaskResponse.setId(userTaskDaily.getDailyTask().getId());
         dailyTaskResponse.setName(userTaskDaily.getDailyTask().getName());
@@ -35,22 +35,22 @@ public class DailyTaskMapper {
         dailyTaskResponse.setTypeTask(userTaskDaily.getDailyTask().getTypeTask());
         dailyTaskResponse.setReward(rewardResponse);
         dailyTaskResponse.setTarget(userTaskDaily.getDailyTask().getTarget());
-        dailyTaskResponse.setCreatedAt(userTaskDaily.getDailyTask().getCreatedAt().toString());
-        dailyTaskResponse.setUpdatedAt(userTaskDaily.getDailyTask().getUpdatedAt().toString());
+        dailyTaskResponse.setCreatedAt(userTaskDaily.getDailyTask().getCreatedAt() != null ? userTaskDaily.getDailyTask().getCreatedAt().toString() : "");
+        dailyTaskResponse.setUpdatedAt(userTaskDaily.getDailyTask().getUpdatedAt() != null ? userTaskDaily.getDailyTask().getUpdatedAt().toString() : "");
 
         rewardResponse.setId(userTaskDaily.getDailyTask().getReward().getId());
         rewardResponse.setGold(userTaskDaily.getDailyTask().getReward().getGold());
         rewardResponse.setMana(userTaskDaily.getDailyTask().getReward().getMana());
         rewardResponse.setInventoryItem(inventoryItemResponse);
         rewardResponse.setAmountInventoryItems(userTaskDaily.getDailyTask().getReward().getAmountInventoryItems());
-        rewardResponse.setCreatedAt(userTaskDaily.getDailyTask().getReward().getCreatedAt().toString());
-        rewardResponse.setUpdatedAt(userTaskDaily.getDailyTask().getReward().getUpdatedAt().toString());
+        rewardResponse.setCreatedAt(userTaskDaily.getDailyTask().getReward().getCreatedAt() != null ? userTaskDaily.getDailyTask().getReward().getCreatedAt().toString() : "");
+        rewardResponse.setUpdatedAt(userTaskDaily.getDailyTask().getReward().getUpdatedAt() != null ? userTaskDaily.getDailyTask().getReward().getUpdatedAt().toString() : "");
 
-        inventoryItemResponse.setId(userTaskDaily.getDailyTask().getReward().getInventoryItem().getId());
-        inventoryItemResponse.setName(userTaskDaily.getDailyTask().getReward().getInventoryItem().getName());
-        inventoryItemResponse.setImage(userTaskDaily.getDailyTask().getReward().getInventoryItem().getImage());
-        inventoryItemResponse.setCreatedAt(userTaskDaily.getDailyTask().getReward().getInventoryItem().getCreatedAt().toString());
-        inventoryItemResponse.setUpdatedAt(userTaskDaily.getDailyTask().getReward().getInventoryItem().getUpdatedAt().toString());
+        inventoryItemResponse.setId(userTaskDaily.getDailyTask().getReward().getInventory().getId());
+        inventoryItemResponse.setName(userTaskDaily.getDailyTask().getReward().getInventory().getName());
+        inventoryItemResponse.setImage(userTaskDaily.getDailyTask().getReward().getInventory().getImage());
+        inventoryItemResponse.setCreatedAt(userTaskDaily.getDailyTask().getReward().getInventory().getCreatedAt() != null ? userTaskDaily.getDailyTask().getReward().getInventory().getCreatedAt().toString() : null);
+        inventoryItemResponse.setUpdatedAt(userTaskDaily.getDailyTask().getReward().getInventory().getUpdatedAt() != null ? userTaskDaily.getDailyTask().getReward().getInventory().getUpdatedAt().toString() : null);
 
         return userDailyTaskResponse;
     }

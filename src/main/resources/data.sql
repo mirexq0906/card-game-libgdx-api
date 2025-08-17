@@ -1,26 +1,27 @@
 DELETE
-FROM users;
+FROM app_user;
 DELETE
-FROM inventories;
+FROM inventory;
 DELETE
-FROM collections;
+FROM character;
 DELETE
 FROM user_inventory;
 DELETE
-FROM user_collection;
+FROM user_character;
 DELETE
-FROM rewards;
+FROM reward;
 DELETE
-FROM daily_tasks;
+FROM daily_task;
 
-ALTER SEQUENCE users_id_seq RESTART WITH 1;
-ALTER SEQUENCE collections_id_seq RESTART WITH 1;
-ALTER SEQUENCE inventories_id_seq RESTART WITH 1;
-ALTER SEQUENCE user_collection_id_seq RESTART WITH 1;
-ALTER SEQUENCE rewards_id_seq RESTART WITH 1;
-ALTER SEQUENCE daily_tasks_id_seq RESTART WITH 1;
+ALTER SEQUENCE app_user_id_seq RESTART WITH 1;
+ALTER SEQUENCE inventory_id_seq RESTART WITH 1;
+ALTER SEQUENCE character_id_seq RESTART WITH 1;
+-- ALTER SEQUENCE user_inventory_id_seq RESTART WITH 1;
+-- ALTER SEQUENCE user_character_id_seq RESTART WITH 1;
+ALTER SEQUENCE reward_id_seq RESTART WITH 1;
+ALTER SEQUENCE daily_task_id_seq RESTART WITH 1;
 
-INSERT INTO users (username, email, password, role, gold, mana)
+INSERT INTO app_user (username, email, password, role, gold, mana)
 VALUES ('test',
         'test@mail.ru',
         '$2a$12$d/kWeVWU8GhpWl7RkBIfaeQoBGJeyCxzshqoDU2frhtY2JWvZHjlG',
@@ -28,17 +29,17 @@ VALUES ('test',
         '200',
         '300');
 
-INSERT INTO inventories (name, image)
-VALUES ('item 1', 'item1.png'),
-       ('item 2', 'item2.png'),
-       ('item 3', 'item1.png'),
-       ('item 4', 'item2.png'),
-       ('item 5', 'item1.png'),
-       ('item 6', 'item2.png'),
-       ('item 7', 'item1.png'),
-       ('item 8', 'item2.png');
+INSERT INTO inventory (name, image, type, description)
+VALUES ('item 1', 'item1.png', 'EQUIPMENT', 'description'),
+       ('item 2', 'item2.png', 'EQUIPMENT', 'description'),
+       ('item 3', 'item1.png', 'EQUIPMENT', 'description'),
+       ('item 4', 'item2.png', 'EQUIPMENT', 'description'),
+       ('item 5', 'item1.png', 'EQUIPMENT', 'description'),
+       ('item 6', 'item2.png', 'EQUIPMENT', 'description'),
+       ('item 7', 'item1.png', 'EQUIPMENT', 'description'),
+       ('item 8', 'item2.png', 'EQUIPMENT', 'description');
 
-INSERT INTO collections (name, image)
+INSERT INTO character (name, image)
 VALUES ('collection 1', 'collection_1.png'),
        ('collection 2', 'collection_2.png'),
        ('collection 3', 'collection_3.png'),
@@ -62,7 +63,7 @@ VALUES (1, 1),
        (1, 7),
        (1, 8);
 
-INSERT INTO user_collection (user_id, collection_id)
+INSERT INTO user_character (user_id, character_id)
 VALUES (1, 1),
        (1, 2),
        (1, 3),
@@ -77,11 +78,8 @@ VALUES (1, 1),
        (1, 12);
 
 
-INSERT INTO rewards (gold, mana, inventory_id, amount_inventory_items)
+INSERT INTO reward (gold, mana, inventory_id, amount_inventory_items)
 VALUES (200, 100, 1, 1);
 
-INSERT INTO daily_tasks(name, description, type_task, target, reward_id)
+INSERT INTO daily_task(name, description, type_task, target, reward_id)
 VALUES ('daily login', 'daily login desc', 'LOGIN', 1, 1);
---
--- INSERT INTO user_task_daily (user_id, daily_task_id, progress, completed)
--- VALUES (1, 1, 0, false);

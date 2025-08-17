@@ -1,7 +1,9 @@
 package com.example.cardgameapi.repository;
 
-public interface InventoryRepository {
+import com.example.cardgameapi.entity.inventory.Inventory;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-    void addInventoryItemToUser(Long userId, Long itemId);
-
+@Repository
+public interface InventoryRepository extends JpaRepository<Inventory, Integer> {
 }

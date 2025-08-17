@@ -24,8 +24,8 @@ public class UserMapper {
         userResponse.setRole(user.getRole().toString());
         userResponse.setGold(user.getGold().toString());
         userResponse.setMana(user.getMana().toString());
-        userResponse.setCreatedAt(user.getCreateTime().toString());
-        userResponse.setUpdatedAt(user.getUpdateTime().toString());
+        userResponse.setCreatedAt(user.getCreateTime() != null ? user.getCreateTime().toString() : null);
+        userResponse.setUpdatedAt(user.getUpdateTime() != null ? user.getUpdateTime().toString() : null);
         return userResponse;
     }
 

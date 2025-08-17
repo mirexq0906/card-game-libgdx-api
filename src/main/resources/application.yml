@@ -3,6 +3,12 @@ spring:
     url: jdbc:postgresql://localhost:5432/card_db
     username: root
     password: root
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    defer-datasource-initialization: true
   sql:
     init:
       mode: always

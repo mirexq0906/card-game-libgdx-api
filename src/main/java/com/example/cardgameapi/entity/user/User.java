@@ -1,6 +1,7 @@
 package com.example.cardgameapi.entity.user;
 
-import com.example.cardgameapi.entity.collection.Character;
+import com.example.cardgameapi.entity.character.CharacterInstance;
+import com.example.cardgameapi.entity.character.CharacterTemplate;
 import com.example.cardgameapi.entity.inventory.Inventory;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -42,13 +43,9 @@ public class User implements UserDetails {
     )
     private Set<Inventory> inventories = new HashSet<>();
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(
-        name = "user_character",
-        joinColumns = @JoinColumn(name = "user_id"),
-        inverseJoinColumns = @JoinColumn(name = "character_id")
-    )
-    private Set<Character> characters = new HashSet<>();
+    @OneToMany
+    @JoinColumn(name = "user_id")
+    private Set<CharacterInstance> characterInstances = new HashSet<>();
 
     @CreationTimestamp
     private LocalDateTime createTime;

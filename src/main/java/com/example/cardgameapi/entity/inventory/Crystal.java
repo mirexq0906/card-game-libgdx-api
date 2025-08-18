@@ -12,14 +12,7 @@ import java.time.LocalDateTime;
 
 @Data
 @Entity
-public class Crystal {
+public class Crystal extends Inventory {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long itemId;
-    @CreationTimestamp
-    private LocalDateTime createdAt;
-    @UpdateTimestamp
-    private LocalDateTime updatedAt;
 
 }

@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 
 @Data
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 public class Inventory {
 
     @Id

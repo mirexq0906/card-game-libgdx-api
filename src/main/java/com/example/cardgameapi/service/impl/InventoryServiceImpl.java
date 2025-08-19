@@ -6,7 +6,8 @@ import com.example.cardgameapi.entity.inventory.Inventory;
 import com.example.cardgameapi.entity.inventory.InventoryType;
 import com.example.cardgameapi.entity.user.User;
 import com.example.cardgameapi.exception.EntityNotFoundException;
-import com.example.cardgameapi.service.EquipmentService;
+import com.example.cardgameapi.repository.InventoryRepository;
+import com.example.cardgameapi.service.InventoryService;
 import com.example.cardgameapi.service.UserService;
 import com.example.cardgameapi.web.dto.EquipmentDto;
 import lombok.RequiredArgsConstructor;
@@ -18,9 +19,16 @@ import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
-public class EquipmentServiceImpl implements EquipmentService {
+public class InventoryServiceImpl implements InventoryService {
 
     private final UserService userService;
+    private final InventoryRepository inventoryRepository;
+
+    @Override
+    public Inventory findInventoryById(Long id) {
+        return inventoryRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("Inventory not found"));
+    }
 
     @Override
     @Transactional

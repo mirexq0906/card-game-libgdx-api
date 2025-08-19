@@ -1,13 +1,17 @@
 package com.example.cardgameapi.entity.character;
 
 import com.example.cardgameapi.entity.inventory.Equipment;
+import com.example.cardgameapi.entity.set_bonus.SetBonus;
 import com.example.cardgameapi.entity.user.User;
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.http.converter.json.GsonBuilderUtils;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Data
 @Entity
@@ -35,7 +39,16 @@ public class CharacterInstance {
             .mapToInt(Equipment::getHp)
             .sum();
         int bonusFromLevel = level * 10;
-        return template.getBaseHp() + bonusFromEquip + bonusFromLevel;
+
+        int hp = template.getBaseHp() + bonusFromEquip + bonusFromLevel;
+
+        for (SetBonus bonus : getActiveSetBonuses()) {
+            if ("HP".equalsIgnoreCase(bonus.getStatType())) {
+                hp += bonus.getBonusValue();
+            }
+        }
+
+        return hp;
     }
 
     @Transient
@@ -44,7 +57,36 @@ public class CharacterInstance {
             .mapToInt(Equipment::getPower)
             .sum();
         int bonusFromLevel = level * 2;
-        return getTemplate().getBaseAutoAttack() + bonusFromEquip + bonusFromLevel;
+
+        int dmg = template.getBaseAutoAttack() + bonusFromEquip + bonusFromLevel;
+
+        for (SetBonus bonus : getActiveSetBonuses()) {
+            if ("ATTACK".equalsIgnoreCase(bonus.getStatType())) {
+                dmg += bonus.getBonusValue();
+            }
+        }
+
+        return dmg;
+    }
+
+    @Transient
+    public List<SetBonus> getActiveSetBonuses() {
+        List<SetBonus> bonuses = new ArrayList<>();
+
+        Map<String, Long> counts = equipments.stream()
+            .flatMap(e -> e.getSetBonuses().stream().map(SetBonus::getSetName))
+            .collect(Collectors.groupingBy(name -> name, Collectors.counting()));
+
+        equipments.stream()
+            .flatMap(e -> e.getSetBonuses().stream())
+            .distinct()
+            .forEach(bonus -> {
+                if (counts.getOrDefault(bonus.getSetName(), 0L) >= bonus.getPiecesRequired()) {
+                    bonuses.add(bonus);
+                }
+            });
+
+        return bonuses;
     }
 
 }

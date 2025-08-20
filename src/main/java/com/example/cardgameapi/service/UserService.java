@@ -6,6 +6,7 @@ import com.example.cardgameapi.entity.inventory.InventoryType;
 import com.example.cardgameapi.entity.user.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
+import java.util.List;
 import java.util.Set;
 
 public interface UserService extends UserDetailsService {
@@ -14,6 +15,6 @@ public interface UserService extends UserDetailsService {
 
     Set<Inventory> getInventoryItems(InventoryType inventoryType);
 
-    Set<CharacterInstance> getCharacterInstances();
+    List<CharacterInstance> getCharacterInstances();
 
 }

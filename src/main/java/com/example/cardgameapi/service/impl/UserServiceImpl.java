@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -47,7 +48,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     @Transactional
-    public Set<CharacterInstance> getCharacterInstances() {
+    public List<CharacterInstance> getCharacterInstances() {
         User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return findById(principal.getId()).getCharacterInstances();
     }

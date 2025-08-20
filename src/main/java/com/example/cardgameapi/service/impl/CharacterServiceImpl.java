@@ -13,12 +13,12 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class CharacterServiceImpl implements CharacterService {
 
-    private final CharacterInstanceRepository characterTemplateRepository;
+    private final CharacterInstanceRepository characterInstanceRepository;
 
     @Override
     public CharacterInstance findCharacterInstanceById(Long id) {
         User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return characterTemplateRepository.findCharacterForUser(principal.getId(), id)
+        return characterInstanceRepository.findCharacterForUser(principal.getId(), id)
             .orElseThrow(() -> new EntityNotFoundException("Character instance id " + id + " not found"));
     }
 

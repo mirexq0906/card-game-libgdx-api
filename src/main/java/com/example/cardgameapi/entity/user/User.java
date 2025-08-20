@@ -3,6 +3,7 @@ package com.example.cardgameapi.entity.user;
 import com.example.cardgameapi.entity.character.CharacterInstance;
 import com.example.cardgameapi.entity.character.CharacterTemplate;
 import com.example.cardgameapi.entity.inventory.Inventory;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.experimental.FieldNameConstants;
@@ -13,10 +14,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Data
 @FieldNameConstants
@@ -43,9 +41,8 @@ public class User implements UserDetails {
     )
     private Set<Inventory> inventories = new HashSet<>();
 
-    @OneToMany
-    @JoinColumn(name = "user_id")
-    private Set<CharacterInstance> characterInstances = new HashSet<>();
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CharacterInstance> characterInstances = new ArrayList<>();
 
     @CreationTimestamp
     private LocalDateTime createTime;

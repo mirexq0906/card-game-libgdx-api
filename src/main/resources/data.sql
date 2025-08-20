@@ -31,11 +31,13 @@ VALUES (1, 1),
 
 INSERT INTO character_template (name, image, base_hp, base_auto_attack)
 VALUES ('collection 1', 'collection_1.png', 100, 10),
-       ('collection 2', 'collection_2.png', 150, 15);
+       ('collection 2', 'collection_2.png', 150, 15),
+       ('collection 3', 'collection_3.png', 100, 10);
 
-INSERT INTO character_instance (level, template_id, user_id)
-VALUES (1, 1, 1),
-       (1, 2, 1);
+INSERT INTO character_instance (level, template_id, user_id, fraction_type, rarity_type)
+VALUES (1, 1, 1, 'WATER', 'UNCOMMON'),
+       (1, 3, 1, 'WATER', 'UNCOMMON'),
+       (1, 2, 1, 'FIRE', 'LEGEND');
 
 INSERT INTO reward (gold, mana, inventory_id, amount_inventory_items)
 VALUES (200, 100, 1, 1);

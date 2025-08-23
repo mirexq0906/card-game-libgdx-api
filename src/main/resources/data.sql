@@ -29,10 +29,10 @@ VALUES (1, 1),
        (1, 4),
        (1, 5);
 
-INSERT INTO character_template (name, image, base_hp, base_auto_attack)
-VALUES ('collection 1', 'collection_1.png', 100, 10),
-       ('collection 2', 'collection_2.png', 150, 15),
-       ('collection 3', 'collection_3.png', 100, 10);
+INSERT INTO character_template (name, image, base_hp, base_auto_attack, base_speed)
+VALUES ('collection 1', 'collection_1.png', 100, 10, 1),
+       ('collection 2', 'collection_2.png', 150, 15, 1),
+       ('collection 3', 'collection_3.png', 100, 10, 1);
 
 INSERT INTO character_instance (level, template_id, user_id, fraction_type, rarity_type)
 VALUES (1, 1, 1, 'WATER', 'UNCOMMON'),
@@ -52,3 +52,21 @@ VALUES ('dragon set easy', 1, 'ATTACK', 20),
 INSERT INTO equipment_set_bonus(equipment_id, set_bonus_id)
 VALUES (1, 1),
        (1, 2);
+
+INSERT INTO battle_mode(name, mode, image)
+VALUES ('Campaign', 'CAMPAIGN', 'campaign.jpg'),
+       ('Danger', 'DANGER', 'danger.jpg');
+
+INSERT INTO battle_task(name, battle_mode_id, reward_id)
+VALUES ('task 1', 1, 1);
+
+
+INSERT INTO enemy(name, image, hp, power, fraction_type, rarity_type, speed)
+VALUES ('enemy 1', 'collection_1.png', 100, 50, 'WATER', 'UNCOMMON', 1),
+       ('enemy 2', 'collection_2.png', 110, 40, 'WATER', 'UNCOMMON', 1),
+       ('enemy 3', 'collection_3.png', 120, 30, 'WATER', 'UNCOMMON', 1);
+
+INSERT INTO battle_task_enemy(battle_task_id, enemy_id)
+VALUES (1, 1),
+       (1, 2),
+       (1, 3);

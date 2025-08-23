@@ -1,6 +1,5 @@
-package com.example.cardgameapi.entity.daily_task;
+package com.example.cardgameapi.entity.battle;
 
-import com.example.cardgameapi.entity.inventory.Inventory;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -8,24 +7,24 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
-@Data
 @Entity
-public class Reward {
+@Data
+public class BattleMode {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Integer gold = 0;
-    private Integer mana = 0;
 
-    @ManyToOne
-    @JoinColumn(name = "inventory_id")
-    private Inventory inventory;
+    private String name;
 
-    private Integer amountInventoryItems;
+    private String image;
+
+    @Enumerated(EnumType.STRING)
+    private Mode mode;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
+
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 

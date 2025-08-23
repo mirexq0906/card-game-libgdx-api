@@ -115,4 +115,19 @@ public class CharacterInstance {
         return bonuses;
     }
 
+    @Transient
+    public int getEffectiveSpeed() {
+        int speed = template.getBaseSpeed();
+
+        switch (rarityType) {
+            case UNCOMMON -> speed += 1;
+            case RARE -> speed += 2;
+            case EPIC -> speed += 3;
+            case LEGEND -> speed += 4;
+        }
+
+        return speed;
+    }
+
+
 }

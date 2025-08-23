@@ -1,5 +1,6 @@
 package com.example.cardgameapi.entity.character;
 
+import com.example.cardgameapi.entity.ability.Ability;
 import com.example.cardgameapi.entity.inventory.Equipment;
 import com.example.cardgameapi.entity.set_bonus.SetBonus;
 import com.example.cardgameapi.entity.user.User;
@@ -37,6 +38,7 @@ public class CharacterInstance {
     @ManyToOne
     @JoinColumn(name = "template_id")
     private CharacterTemplate template;
+
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
         name = "character_instance_equipment",
@@ -44,6 +46,14 @@ public class CharacterInstance {
         inverseJoinColumns = @JoinColumn(name = "equipment_id")
     )
     private Set<Equipment> equipments = new HashSet<>();
+
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
+    @JoinTable(
+        name = "character_instance_ability",
+        joinColumns = @JoinColumn(name = "character_instance_id"),
+        inverseJoinColumns = @JoinColumn(name = "ability_id")
+    )
+    private List<Ability> abilities = new ArrayList<>();
 
     @Transient
     public int getEffectiveHp() {

@@ -11,6 +11,7 @@ import com.example.cardgameapi.entity.character.CharacterInstance;
 import com.example.cardgameapi.entity.user.User;
 import com.example.cardgameapi.exception.EntityNotFoundException;
 import com.example.cardgameapi.repository.*;
+import com.example.cardgameapi.service.ability.AbilityService;
 import com.example.cardgameapi.web.dto.BattleDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -31,6 +32,7 @@ public class BattleLogicServiceImpl {
     private final BattleTaskRepository battleTaskRepository;
     private final EnemyRepository enemyRepository;
     private final UserRepository userRepository;
+    private final AbilityService abilityService;
 
     private final Map<UUID, BattleSession> battleSessions = new ConcurrentHashMap<>();
 
@@ -49,6 +51,7 @@ public class BattleLogicServiceImpl {
         battleSession.setQueue(queue);
         battleSession.setUserId(principal.getId());
         battleSession.setTaskId(battleDto.getTaskId());
+        System.out.println(battleSession);
         battleSessions.put(battleSession.getSessionId(), battleSession);
 
         return battleSession.getSessionId();
@@ -57,6 +60,7 @@ public class BattleLogicServiceImpl {
     public BattleSession getBattleSession(UUID sessionId) {
         User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         BattleSession battleSession = battleSessions.get(sessionId);
+
 
         if (!battleSession.getUserId().equals(principal.getId())) {
             throw new RuntimeException("User does not belong to this session");
@@ -81,7 +85,13 @@ public class BattleLogicServiceImpl {
             .filter(battleCharacter -> battleCharacter.getId().equals(battleDto.getDefenderCharacterId()))
             .findFirst()
             .orElseThrow(() -> new EntityNotFoundException("defender not found"));
-        defender.setHp(defender.getHp() - attacker.getPower());
+
+        if (battleDto.getAbilityId() != null) {
+            abilityService.executeAbility(attacker, defender, battleDto.getAbilityId());
+        } else {
+            defender.setHp(defender.getHp() - attacker.getPower());
+        }
+        
         battleSession.getQueue().add(attacker);
 
         if (defender.getHp() <= 0) {
@@ -163,6 +173,7 @@ public class BattleLogicServiceImpl {
                         battleCharacter.setTurnType(TurnType.PLAYER);
                         battleCharacter.setSpeed(characterInstance.getEffectiveSpeed());
                         battleCharacter.setHp(characterInstance.getEffectiveHp());
+                        battleCharacter.setAbilities(characterInstance.getAbilities());
                         battleCharacter.setPower(characterInstance.getEffectiveHp());
                         battleCharacter.setImage(characterInstance.getTemplate().getImage());
                         return battleCharacter;
@@ -174,6 +185,7 @@ public class BattleLogicServiceImpl {
                         battleCharacter.setTurnType(TurnType.ENEMY);
                         battleCharacter.setSpeed(enemy.getSpeed());
                         battleCharacter.setHp(enemy.getHp());
+                        battleCharacter.setAbilities(new ArrayList<>());
                         battleCharacter.setPower(enemy.getPower());
                         battleCharacter.setImage(enemy.getImage());
                         return battleCharacter;

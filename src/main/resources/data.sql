@@ -39,6 +39,14 @@ VALUES (1, 1, 1, 'WATER', 'UNCOMMON'),
        (1, 3, 1, 'WATER', 'UNCOMMON'),
        (1, 2, 1, 'FIRE', 'LEGEND');
 
+INSERT INTO ability (name, image, description, value, type, target, attribute)
+VALUES ('de buff', 'collection_1.png', 'description', 2, 'DEBUFF', 'ENEMY', 'SPEED'),
+       ('de buff 2', 'ability_1.png', 'description', 2, 'DEBUFF', 'ENEMY', 'SPEED');
+
+INSERT INTO character_instance_ability (character_instance_id, ability_id)
+VALUES (1, 1),
+       (1, 2);
+
 INSERT INTO reward (gold, mana, inventory_id, amount_inventory_items)
 VALUES (200, 100, 1, 1);
 
